@@ -1,0 +1,22 @@
+# first, install Cypress, then run all tests (in parallel)
+stages:
+  - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+    - /root/.cache/Cypress
+    - node_modules
+
+# this job installs NPM dependencies and Cypress
+test:
+  image: cypress/base:12
+  stage: test
+  script:
+    - node -v
+    - npm i
+    - npx cypress install
+    - npm run start:wait-on
+    - npm test

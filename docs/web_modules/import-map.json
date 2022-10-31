@@ -1,0 +1,19 @@
+{
+  "imports": {
+    "animejs": "./animejs.js",
+    "htm": "./htm.js",
+    "htm/preact": "./htm/preact.js",
+    "immer": "./immer.js",
+    "preact": "./preact.js",
+    "preact-render-to-string": "./preact-render-to-string.js",
+    "preact-router": "./preact-router.js",
+    "preact/hooks": "./preact/hooks.js",
+    "rxjs": "./rxjs.js",
+    "should/as-function.js": "./should/as-function.js",
+    "simplestyle-js": "./simplestyle-js.js",
+    "three": "./three.js",
+    "three/examples/jsm/controls/OrbitControls": "./three/examples/jsm/controls/OrbitControls.js",
+    "three/examples/jsm/libs/stats.module.js": "./three/examples/jsm/libs/stats.module.js",
+    "three/examples/jsm/loaders/TGALoader": "./three/examples/jsm/loaders/TGALoader.js"
+  }
+}

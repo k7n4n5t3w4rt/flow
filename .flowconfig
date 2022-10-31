@@ -1,0 +1,7 @@
+[libs]
+./flow-typed
+./flowtypes.js
+[ignore]
+.*/node_modules/
+.*/web_modules/
+.*/build/

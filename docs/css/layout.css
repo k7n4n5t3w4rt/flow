@@ -1,0 +1,67 @@
+* { box-sizing: border-box }
+a {
+	text-decoration: none;
+}
+h1 {
+	font-size: 2rem;
+}
+h2 {
+	font-size: 1.8rem;
+}
+h3 {
+	font-size: 1.4rem;
+}
+
+body {
+	font-family: "Poppins","Helvetica","Arial","Lucida",sans-serif;
+	font-size: .9rem;
+}
+
+html,
+body,
+#goodthing
+{
+	height: 100%;
+}
+
+/* If you want to override your materialize css then you have to use media query for this like in your custom css file which should be defined below your materialize.css file */
+
+@media only screen and (min-width: 701px){
+  .s12{
+    width:100%
+  }
+  .hide-on-small-only{
+    display:none;
+  }
+  /* other css...    */
+}
+
+/* From https://google.github.io/material-design-icons/#getting-icons */
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+/* From Materialize.css, amended */
+.input-field > label.no-pointer-event {
+  pointer-events: none;
+}
+.input-field > input:focus + label,
+.input-field > input:valid + label {
+	transform: translateY(-14px) scale(0.8);
+	transform-origin: 0 0;
+}
+
+.eruda-container {
+	z-index: 1000000 !important
+}

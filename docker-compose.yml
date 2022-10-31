@@ -1,0 +1,15 @@
+# https://docs.docker.com/compose/compose-file/
+version: "3.8"
+services:
+  ########################
+  # Goodthing
+  ########################
+  goodthing:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./:/app
+    entrypoint: npm run start
