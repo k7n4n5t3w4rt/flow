@@ -36,9 +36,9 @@ const writeToCache = (
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
   }
   fs.writeFileSync(filePath, renderedOutput);
-  console.log("File " + filePath + " was written successfully\n");
-  console.log("The written has the following contents:");
-  console.log(fs.readFileSync(filePath, "utf8"));
+  // console.log("File " + filePath + " was written successfully\n");
+  // console.log("The written has the following contents:");
+  // console.log(fs.readFileSync(filePath, "utf8"));
   return true;
 };
 
