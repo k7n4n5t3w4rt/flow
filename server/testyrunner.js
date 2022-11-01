@@ -6,57 +6,23 @@ let counter /*: number */ = 0;
 
 let testyExecs /*: Array<() => Promise<Array<string>>> */ = [];
 
-glob("**/*.testy.js", async (e /*: Error */, testies /*: Array<string> */) => {
-  console.log("STARTING TO BUILD UP testyExecs...");
-  console.log("testyExecs: ", testyExecs);
+const execFactory = async (e /*: Error */, testies /*: Array<string> */) => {
   testyExecs = [
     ...testyExecs,
-    ...(await testies.reduce(
-      async (
-        carry /*: Promise<Array<() => Promise<Array<string>>>> */,
-        testyFilePath /*: string */,
-      ) /*:Promise<any> */ => {
-        console.log("PROCESSING: ", testyFilePath);
-        return [
-          ...(await carry),
-          () /*: Promise<Array<string>> */ => {
-            return new Promise((resolve) => {
-              console.log("CALLED FOR ", testyFilePath);
-              exec(`node ${testyFilePath}`, processExecMessages(resolve));
-            });
-          },
-        ];
-      },
-      Promise.resolve([]),
-    )),
+    ...(await testies.reduce(execFactoryReducerFunction, Promise.resolve([]))),
   ];
-  console.log("testyExecs: ", testyExecs);
   const faucetMessages /*: Array<string>*/ = await testyExecs.reduce(
-    async (
-      carry /*: Promise<Array<string>> */,
-      testyExec /*: () => Promise<Array<string>> */,
-    ) /*: any */ => {
-      const flatMessages /*: Array<string>*/ = [];
-      const oksOrNotOk = await testyExec();
-      oksOrNotOk.forEach((message /*: string */) /*: void */ => {
-        // console.log("ADDING MESSAGE TO THE flatMessages", message);
-        ++counter;
-        flatMessages.push(message.replace(/ok/, `ok ${counter}`));
-      });
-      return [...(await carry), ...flatMessages];
-    },
+    execReducerFunction,
     Promise.resolve([]),
   );
   // console.log("HERE");
   console.log(`1..${faucetMessages.length}`);
-  faucetMessages.forEach((message /*: string */) /*: void */ => {
+  faucetMessages.forEach((message /*: string */) => {
     console.log(message);
   });
-});
+};
 
-// .catch((fail /*: string */) /*: void */ => {
-//   console.log(fail);
-// });
+glob("**/*.testy.js", execFactory);
 
 const experimentalWarningFilter = (currentElement /*: string */) => {
   return (
@@ -71,7 +37,6 @@ const processExecMessages = (resolve /*: function */) => (
   stdout /*: function */,
   stderr /*: function */,
 ) /*: void */ => {
-  console.log("processExecMessages: ", counter + 1);
   if (e) {
     ++counter;
     resolve([`${e.message}...${stderr}`]);
@@ -93,4 +58,32 @@ const processExecMessages = (resolve /*: function */) => (
     (currentElement /*: string */) => currentElement !== "",
   );
   resolve(messages);
+};
+
+const execFactoryReducerFunction = async (
+  carry /*: Promise<Array<() => Promise<Array<string>>>> */,
+  testyFilePath /*: string */,
+) => {
+  return [
+    ...(await carry),
+    () => {
+      return new Promise((resolve) => {
+        exec(`node ${testyFilePath}`, processExecMessages(resolve));
+      });
+    },
+  ];
+};
+
+const execReducerFunction = async (
+  carry /*: Promise<Array<string>> */,
+  testyExec /*: () => Promise<Array<string>> */,
+) => {
+  const flatMessages /*: Array<string>*/ = [];
+  const oksOrNotOk = await testyExec();
+  oksOrNotOk.forEach((message /*: string */) => {
+    // console.log("ADDING MESSAGE TO THE flatMessages", message);
+    ++counter;
+    flatMessages.push(message.replace(/ok/, `ok ${counter}`));
+  });
+  return [...(await carry), ...flatMessages];
 };
