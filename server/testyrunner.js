@@ -31,9 +31,9 @@ glob("**/*.testy.js", async (e /*: Error */, testies /*: Array<string> */) => {
     )),
   ];
   console.log("testyExecs: ", testyExecs);
-  const faucetMessages /*: Array<Array<string>>*/ = await testyExecs.reduce(
+  const faucetMessages /*: Array<string>*/ = await testyExecs.reduce(
     async (
-      carry /*: Promise<Array<Array<string>>> */,
+      carry /*: Promise<Array<string>> */,
       testyExec /*: () => Promise<Array<string>> */,
     ) /*: any */ => {
       const flatMessages /*: Array<string>*/ = [];
@@ -47,10 +47,9 @@ glob("**/*.testy.js", async (e /*: Error */, testies /*: Array<string> */) => {
     },
     Promise.resolve([]),
   );
-  const flatFaucetMessages = faucetMessages.flat();
   // console.log("HERE");
-  console.log(`1..${flatFaucetMessages.length}`);
-  flatFaucetMessages.forEach((message /*: string */) /*: void */ => {
+  console.log(`1..${faucetMessages.length}`);
+  faucetMessages.forEach((message /*: string */) /*: void */ => {
     console.log(message);
   });
 });
