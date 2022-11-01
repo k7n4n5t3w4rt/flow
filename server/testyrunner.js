@@ -4,23 +4,32 @@ import { exec } from "child_process";
 
 let counter /*: number */ = 0;
 
+let testyExecs /*: Array<() => Promise<Array<string>>> */ = [];
+
 glob("**/*.testy.js", async (e /*: Error */, testies /*: Array<string> */) => {
   console.log("STARTING TO BUILD UP testyExecs...");
-  const testyExecs /*: Array<() => Promise<Array<string>>> */ = await testies.reduce(
-    async (
-      carry /*: Promise<Array<() => Promise<Array<string>>>> */,
-      testyFilePath /*: string */,
-    ) /*:Promise<any> */ => {
-      console.log("PROCESSING: ", testyFilePath);
-      return () /*: Promise<Array<string>> */ => {
-        return new Promise((resolve) => {
-          console.log("NEVER GETS CALLED FOR ", testyFilePath);
-          exec(`node ${testyFilePath}`, processExecMessages(resolve));
-        });
-      };
-    },
-    Promise.resolve([]),
-  );
+  console.log("testyExecs: ", testyExecs);
+  testyExecs = [
+    ...testyExecs,
+    ...(await testies.reduce(
+      async (
+        carry /*: Promise<Array<() => Promise<Array<string>>>> */,
+        testyFilePath /*: string */,
+      ) /*:Promise<any> */ => {
+        console.log("PROCESSING: ", testyFilePath);
+        return [
+          ...(await carry),
+          () /*: Promise<Array<string>> */ => {
+            return new Promise((resolve) => {
+              console.log("CALLED FOR ", testyFilePath);
+              exec(`node ${testyFilePath}`, processExecMessages(resolve));
+            });
+          },
+        ];
+      },
+      Promise.resolve([]),
+    )),
+  ];
   console.log("testyExecs: ", testyExecs);
   const faucetMessages /*: Array<Array<string>>*/ = await testyExecs.reduce(
     async (
@@ -34,7 +43,7 @@ glob("**/*.testy.js", async (e /*: Error */, testies /*: Array<string> */) => {
         ++counter;
         flatMessages.push(message.replace(/ok/, `ok ${counter}`));
       });
-      return flatMessages;
+      return [...(await carry), ...flatMessages];
     },
     Promise.resolve([]),
   );
