@@ -4,10 +4,9 @@ import { exec } from "child_process";
 
 let counter /*: number */ = 0;
 const testyExecs /*: Array<() => Promise<Array<string>>> */ = [];
-console.log("THERE SHOULD BE 0 TESTIES", testyExecs.length);
-glob("**/*.testy.js", function (e, testies) {
+
+glob("**/*.testy.js", function (e /*: Error */, testies /*: Array<string> */) {
   testies.forEach(async (testyFilePath /*: string */) /*: Promise<void> */ => {
-    console.log("PROCESSING: ", testyFilePath);
     testyExecs.push(async () /*: Promise<Array<string>> */ => {
       return new Promise((resolve) => {
         exec(`node ${testyFilePath}`, (e, stdout, stderr) => {
@@ -45,7 +44,6 @@ glob("**/*.testy.js", function (e, testies) {
         });
       });
     });
-
     const faucetMessages /*: Array<Array<string>>*/ = await testyExecs.reduce(
       async (
         carry /*: Promise<Array<Array<string>>> */,
